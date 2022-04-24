@@ -54,10 +54,10 @@ const replaceTemplate = (temp, product) => {
   return output
 }
 const server = http.createServer((request, response) => {
-  const pathName = request.url
+  const { query, pathname } = url.parse(request.url, true)
 
   //   OVERVIEW PAGE
-  if (pathName === "/" || pathName === "/overview") {
+  if (pathname === "/" || pathname === "/overview") {
     response.writeHead(200, {
       "Content-type": "text/html",
     })
@@ -68,11 +68,16 @@ const server = http.createServer((request, response) => {
     const output = tempOverview.replace("{%PRODUCT_CARDS%", cardsHtml)
     response.end(output)
     // PRODUCT PAGE
-  } else if (pathName === "/product") {
-    response.end("this is the PRODUCT")
-
+  } else if (pathname === "/product") {
+    response.writeHead(200, {
+      "Content-type": "text/html",
+    })
+    const product = dataObj[query.id]
+    // response.end("this is the PRODUCT")
+    const output = replaceTemplate(productOverview, product)
+    response.end(output)
     // API
-  } else if (pathName === "/api") {
+  } else if (pathname === "/api") {
     response.writeHead(200, { "Content-type": "application/json" })
     response.end(data)
 
