@@ -2,6 +2,7 @@ const fs = require("fs")
 // gives networking capability to create an http service
 const http = require("http")
 const url = require("url")
+const slugify = require("slugify")
 const replaceTemplate = require("./modules/replaceTemplate")
 // ----------------Blocking Synchronous
 // Read files in node js
@@ -39,7 +40,9 @@ const tempCard = fs.readFileSync(
   `${__dirname}/templates/template-card.html`,
   "utf-8"
 )
-
+const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }))
+console.log(slugs)
+console.log(slugify("Fresh Avocados", { lower: true }))
 const server = http.createServer((request, response) => {
   const { query, pathname } = url.parse(request.url, true)
 
